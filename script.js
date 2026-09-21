@@ -1,148 +1,140 @@
-/* =========================================================
-   TAF2NA JAVASCRIPT
-========================================================= */
-
-
-/* ================= MOBILE MENU ================= */
-
-const menuBtn = document.getElementById("menuBtn");
-const mobileMenu = document.getElementById("mobileMenu");
-
-menuBtn.addEventListener("click", () => {
-  mobileMenu.classList.toggle("active");
-
-  menuBtn.textContent =
-    mobileMenu.classList.contains("active") ? "✕" : "☰";
-});
-
-
-document.querySelectorAll(".mobile-menu a").forEach(link => {
-
-  link.addEventListener("click", () => {
-
-    mobileMenu.classList.remove("active");
-
-    menuBtn.textContent = "☰";
-
-  });
-
-});
-
-
-/* ================= FAQ ================= */
-
-const faqQuestions = document.querySelectorAll(".faq-question");
-
-faqQuestions.forEach(question => {
-
-  question.addEventListener("click", () => {
-
-    const item = question.parentElement;
-
-    document.querySelectorAll(".faq-item").forEach(otherItem => {
-
-      if (otherItem !== item) {
-        otherItem.classList.remove("active");
-      }
-
-    });
-
-    item.classList.toggle("active");
-
-  });
-
-});
-
-
-/* ================= SCROLL ANIMATION ================= */
-
-const revealElements = document.querySelectorAll(".reveal");
-
-const observer = new IntersectionObserver(
-  (entries) => {
-
-    entries.forEach(entry => {
-
-      if (entry.isIntersecting) {
-
-        entry.target.classList.add("visible");
-
-        observer.unobserve(entry.target);
-
-      }
-
-    });
-
+const PLAN_DATA = {
+  Home: {
+    name: "Taf2na Home",
+    price: 50,
+    visits: 2,
+    area: "لحد 150 م²"
   },
-  {
-    threshold: 0.12
+
+  Premium: {
+    name: "Taf2na Premium",
+    price: 120,
+    visits: 4,
+    area: "فوق 150 م²"
   }
-);
+};
 
 
-revealElements.forEach(element => {
-  observer.observe(element);
-});
+// اختيار الخطة
+function selectPlan(planName) {
+
+  const plan = document.getElementById("plan");
+
+  plan.value = planName;
+
+  document
+    .getElementById("subscribe")
+    .scrollIntoView({ behavior: "smooth" });
+}
 
 
-/* ================= SUBSCRIBE FORM ================= */
+// Form
+document
+  .getElementById("subscribeForm")
+  .addEventListener("submit", function(event) {
 
-const form = document.getElementById("subscribeForm");
-const successMessage = document.getElementById("formSuccess");
+    event.preventDefault();
 
-form.addEventListener("submit", (event) => {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const area = document.getElementById("area").value.trim();
+    const size = Number(document.getElementById("size").value);
+    const planName = document.getElementById("plan").value;
+    const issue = document.getElementById("issue").value.trim();
 
-  event.preventDefault();
+    if (!PLAN_DATA[planName]) {
+      alert("اختار الخطة أولاً.");
+      return;
+    }
 
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const area = document.getElementById("area").value.trim();
-  const issue = document.getElementById("issue").value.trim();
+    const plan = PLAN_DATA[planName];
 
-  if (!name || !phone || !area) {
-    alert("Please fill in your name, phone number and area.");
-    return;
-  }
+    // التأكد من مساحة البيت
+    if (planName === "Home" && size > 150) {
+      alert("خطة Home مخصصة للبيوت لحد 150 م². للبيوت الأكبر اختار Premium.");
+      return;
+    }
+
+    if (planName === "Premium" && size <= 150) {
+      alert("خطة Premium مخصصة للبيوت فوق 150 م².");
+      return;
+    }
+
+    const request = {
+      id: "REQ-" + Date.now(),
+
+      customer: {
+        name,
+        phone,
+        area,
+        houseSize: size,
+        issue
+      },
+
+      plan: {
+        name: plan.name,
+        price: plan.price,
+        visitsIncluded: plan.visits
+      },
+
+      paymentStatus: "Pending",
+      subscriptionStatus: "New Request",
+
+      visitsUsed: 0,
+      visitsRemaining: plan.visits,
+
+      startDate: null,
+      expiryDate: null,
+
+      createdAt: new Date().toISOString()
+    };
 
 
-  /*
-    WhatsApp message
+    // حفظ مؤقت على الجهاز
+    const requests =
+      JSON.parse(localStorage.getItem("taf2naRequests") || "[]");
 
-    This uses your Taf2na number:
-    +961 76 950 998
-  */
+    requests.push(request);
 
-  const message = `
-مرحباً Taf2na 👋
-
-بدي اشترك بخدمة الصيانة.
-
-الاسم: ${name}
-رقم الهاتف: ${phone}
-المنطقة: ${area}
-
-المشكلة:
-${issue || "لا يوجد"}
-  `;
-
-
-  const whatsappURL =
-    "https://wa.me/96176950998?text=" +
-    encodeURIComponent(message);
-
-
-  successMessage.classList.add("show");
-
-  setTimeout(() => {
-
-    window.open(
-      whatsappURL,
-      "_blank"
+    localStorage.setItem(
+      "taf2naRequests",
+      JSON.stringify(requests)
     );
 
-  }, 700);
 
-});
+    // WhatsApp message
+    const message = `
+*Taf2na — New Subscription Request*
+
+Name: ${name}
+Phone: ${phone}
+Area: ${area}
+House Size: ${size} m²
+
+Plan: ${plan.name}
+Price: $${plan.price}
+Visits: ${plan.visits}
+
+Issue:
+${issue || "N/A"}
+
+Request ID:
+${request.id}
+`;
+
+    const whatsapp =
+      "https://wa.me/96176950998?text=" +
+      encodeURIComponent(message);
+
+    document.getElementById("successMessage").innerHTML =
+      `تم إرسال طلبك بنجاح ✓<br>
+       رقم الطلب: <b>${request.id}</b><br>
+       رح نتابع معك لتأكيد الدفع.`;
+
+    window.open(whatsapp, "_blank");
+
+    this.reset();
+  });
 
 
 /* ================= CURRENT YEAR ================= */
