@@ -3,35 +3,41 @@ const PLAN_DATA = {
     name: "Taf2na Home",
     price: 50,
     visits: 2,
-    area: "لحد 150 م²"
+    maxSize: 150
   },
 
   Premium: {
     name: "Taf2na Premium",
     price: 120,
     visits: 4,
-    area: "فوق 150 م²"
+    minSize: 150
   }
 };
 
-
-// اختيار الخطة
 function selectPlan(planName) {
+  const planSelect = document.getElementById("plan");
 
-  const plan = document.getElementById("plan");
+  if (!planSelect) return;
 
-  plan.value = planName;
+  planSelect.value = planName;
 
-  document
-    .getElementById("subscribe")
-    .scrollIntoView({ behavior: "smooth" });
+  document.getElementById("subscribe")
+    ?.scrollIntoView({
+      behavior: "smooth"
+    });
 }
 
 
-// Form
-document
-  .getElementById("subscribeForm")
-  .addEventListener("submit", function(event) {
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("subscribeForm");
+
+  if (!form) {
+    console.error("subscribeForm not found");
+    return;
+  }
+
+  form.addEventListener("submit", function (event) {
 
     event.preventDefault();
 
@@ -42,33 +48,47 @@ document
     const planName = document.getElementById("plan").value;
     const issue = document.getElementById("issue").value.trim();
 
-    if (!PLAN_DATA[planName]) {
-      alert("اختار الخطة أولاً.");
+    const success = document.getElementById("successMessage");
+
+    if (!name || !phone || !area || !size || !planName) {
+      success.textContent = "رجاءً عبّي كل المعلومات المطلوبة.";
+      success.style.color = "#ff7777";
       return;
     }
 
     const plan = PLAN_DATA[planName];
 
-    // التأكد من مساحة البيت
+    if (!plan) {
+      success.textContent = "الخطة غير صحيحة.";
+      success.style.color = "#ff7777";
+      return;
+    }
+
+    // التحقق من مساحة البيت
     if (planName === "Home" && size > 150) {
-      alert("خطة Home مخصصة للبيوت لحد 150 م². للبيوت الأكبر اختار Premium.");
+      success.textContent =
+        "خطة Home للبيوت لحد 150 م². اختار Premium.";
+      success.style.color = "#ff7777";
       return;
     }
 
     if (planName === "Premium" && size <= 150) {
-      alert("خطة Premium مخصصة للبيوت فوق 150 م².");
+      success.textContent =
+        "خطة Premium للبيوت فوق 150 م².";
+      success.style.color = "#ff7777";
       return;
     }
+
 
     const request = {
       id: "REQ-" + Date.now(),
 
       customer: {
-        name,
-        phone,
-        area,
+        name: name,
+        phone: phone,
+        area: area,
         houseSize: size,
-        issue
+        issue: issue
       },
 
       plan: {
@@ -90,21 +110,38 @@ document
     };
 
 
-    // حفظ مؤقت على الجهاز
-    const requests =
-      JSON.parse(localStorage.getItem("taf2naRequests") || "[]");
+    // حفظ الطلب
+    try {
 
-    requests.push(request);
+      const requests = JSON.parse(
+        localStorage.getItem("taf2naRequests") || "[]"
+      );
 
-    localStorage.setItem(
-      "taf2naRequests",
-      JSON.stringify(requests)
-    );
+      requests.push(request);
+
+      localStorage.setItem(
+        "taf2naRequests",
+        JSON.stringify(requests)
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      success.textContent =
+        "صار خطأ بحفظ الطلب. جرّب مرة ثانية.";
+
+      success.style.color = "#ff7777";
+
+      return;
+    }
 
 
-    // WhatsApp message
-    const message = `
-*Taf2na — New Subscription Request*
+    // رسالة WhatsApp
+    const message =
+`Taf2na - New Subscription Request
+
+Request ID: ${request.id}
 
 Name: ${name}
 Phone: ${phone}
@@ -118,24 +155,34 @@ Visits: ${plan.visits}
 Issue:
 ${issue || "N/A"}
 
-Request ID:
-${request.id}
-`;
+Payment:
+Whish Money - 03 950 998`;
 
-    const whatsapp =
+
+    const whatsappURL =
       "https://wa.me/96176950998?text=" +
       encodeURIComponent(message);
 
-    document.getElementById("successMessage").innerHTML =
+
+    success.innerHTML =
       `تم إرسال طلبك بنجاح ✓<br>
        رقم الطلب: <b>${request.id}</b><br>
-       رح نتابع معك لتأكيد الدفع.`;
+       رح نتواصل معك لتأكيد الدفع.`;
 
-    window.open(whatsapp, "_blank");
+    success.style.color = "#8df0a9";
 
-    this.reset();
+
+    // افتح WhatsApp بعد نجاح حفظ الطلب
+    setTimeout(() => {
+      window.open(whatsappURL, "_blank");
+    }, 300);
+
+
+    form.reset();
+
   });
 
+});
 
 /* ================= CURRENT YEAR ================= */
 
