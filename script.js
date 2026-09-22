@@ -183,7 +183,6 @@ Whish Money - 03 950 998`;
   });
 
 });
-
 /* ================= CURRENT YEAR ================= */
 
 document.getElementById("year").textContent =
