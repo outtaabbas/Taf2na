@@ -1,191 +1,815 @@
-const PLAN_DATA = {
-  Home: {
-    name: "Taf2na Home",
-    price: 50,
-    visits: 2,
-    maxSize: 150
-  },
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  Premium: {
-    name: "Taf2na Premium",
-    price: 120,
-    visits: 4,
-    minSize: 150
-  }
-};
+  <title>Taf2na | صيانة بيتك علينا</title>
+  <meta
+    name="description"
+    content="Taf2na - اشتراك صيانة منزلي شامل للكهرباء، السباكة، النجارة، الحدادة وصيانة المنزل."
+  />
 
-function selectPlan(planName) {
-  const planSelect = document.getElementById("plan");
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  if (!planSelect) return;
+<body>
 
-  planSelect.value = planName;
+  <!-- ================= NAVBAR ================= -->
 
-  document.getElementById("subscribe")
-    ?.scrollIntoView({
-      behavior: "smooth"
-    });
-}
+  <header class="navbar">
+    <div class="container nav-inner">
 
+      <a href="#" class="logo">
+        <span class="logo-mark">T</span>
+        <span>Taf<span>2</span>na</span>
+      </a>
 
-document.addEventListener("DOMContentLoaded", () => {
+      <nav class="nav-links">
+        <a href="#services">خدماتنا</a>
+        <a href="#how">كيف بتشتغل؟</a>
+        <a href="#pricing">الاشتراك</a>
+        <a href="#faq">الأسئلة</a>
+      </nav>
 
-  const form = document.getElementById("subscribeForm");
+      <a href="#subscribe" class="nav-cta">
+        اشترك هلّق
+      </a>
 
-  if (!form) {
-    console.error("subscribeForm not found");
-    return;
-  }
+      <button class="menu-btn" id="menuBtn">
+        ☰
+      </button>
 
-  form.addEventListener("submit", function (event) {
-
-    event.preventDefault();
-
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const area = document.getElementById("area").value.trim();
-    const size = Number(document.getElementById("size").value);
-    const planName = document.getElementById("plan").value;
-    const issue = document.getElementById("issue").value.trim();
-
-    const success = document.getElementById("successMessage");
-
-    if (!name || !phone || !area || !size || !planName) {
-      success.textContent = "رجاءً عبّي كل المعلومات المطلوبة.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    const plan = PLAN_DATA[planName];
-
-    if (!plan) {
-      success.textContent = "الخطة غير صحيحة.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    // التحقق من مساحة البيت
-    if (planName === "Home" && size > 150) {
-      success.textContent =
-        "خطة Home للبيوت لحد 150 م². اختار Premium.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    if (planName === "Premium" && size <= 150) {
-      success.textContent =
-        "خطة Premium للبيوت فوق 150 م².";
-      success.style.color = "#ff7777";
-      return;
-    }
+    </div>
+  </header>
 
 
-    const request = {
-      id: "REQ-" + Date.now(),
+  <!-- ================= MOBILE MENU ================= -->
 
-      customer: {
-        name: name,
-        phone: phone,
-        area: area,
-        houseSize: size,
-        issue: issue
-      },
-
-      plan: {
-        name: plan.name,
-        price: plan.price,
-        visitsIncluded: plan.visits
-      },
-
-      paymentStatus: "Pending",
-      subscriptionStatus: "New Request",
-
-      visitsUsed: 0,
-      visitsRemaining: plan.visits,
-
-      startDate: null,
-      expiryDate: null,
-
-      createdAt: new Date().toISOString()
-    };
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#services">خدماتنا</a>
+    <a href="#how">كيف بتشتغل؟</a>
+    <a href="#pricing">الاشتراك</a>
+    <a href="#faq">الأسئلة</a>
+    <a href="#subscribe" class="mobile-cta">اشترك هلّق</a>
+  </div>
 
 
-    // حفظ الطلب
-    try {
+  <!-- ================= HERO ================= -->
 
-      const requests = JSON.parse(
-        localStorage.getItem("taf2naRequests") || "[]"
-      );
+  <main>
 
-      requests.push(request);
+    <section class="hero">
 
-      localStorage.setItem(
-        "taf2naRequests",
-        JSON.stringify(requests)
-      );
+      <div class="container hero-grid">
 
-    } catch (error) {
+        <div class="hero-content reveal">
 
-      console.error(error);
+          <div class="eyebrow">
+            <span class="dot"></span>
+            صيانة بيتك صارت أسهل
+          </div>
 
-      success.textContent =
-        "صار خطأ بحفظ الطلب. جرّب مرة ثانية.";
+          <h1>
+            بيتك بدّو صيانة؟
+            <span>Taf2na.</span>
+          </h1>
 
-      success.style.color = "#ff7777";
+          <p class="hero-text">
+            بدل ما كل مرة تدوّر على كهربجي، سبّاك، نجّار أو حدّاد...
+            <strong>Taf2na</strong> بيكون معك باشتراك واحد لصيانة بيتك.
+          </p>
 
-      return;
-    }
+          <div class="hero-buttons">
 
+            <a href="#subscribe" class="btn btn-primary">
+              اشترك بـ $50
+              <span>←</span>
+            </a>
 
-    // رسالة WhatsApp
-    const message =
-`Taf2na - New Subscription Request
+            <a href="tel:+96176950998" class="btn btn-secondary">
+              اتصل فينا
+              <span>📞</span>
+            </a>
 
-Request ID: ${request.id}
+          </div>
 
-Name: ${name}
-Phone: ${phone}
-Area: ${area}
-House Size: ${size} m²
+          <div class="trust-row">
 
-Plan: ${plan.name}
-Price: $${plan.price}
-Visits: ${plan.visits}
+            <div>
+              <strong>2</strong>
+              <span>زيارات شهرياً</span>
+            </div>
 
-Issue:
-${issue || "N/A"}
+            <div>
+              <strong>$50</strong>
+              <span>شهرياً</span>
+            </div>
 
-Payment:
-Whish Money - 03 950 998`;
+            <div>
+              <strong>6+</strong>
+              <span>مجالات صيانة</span>
+            </div>
 
+          </div>
 
-    const whatsappURL =
-      "https://wa.me/96176950998?text=" +
-      encodeURIComponent(message);
-
-
-    success.innerHTML =
-      `تم إرسال طلبك بنجاح ✓<br>
-       رقم الطلب: <b>${request.id}</b><br>
-       رح نتواصل معك لتأكيد الدفع.`;
-
-    success.style.color = "#8df0a9";
-
-
-    // افتح WhatsApp بعد نجاح حفظ الطلب
-    setTimeout(() => {
-      window.open(whatsappURL, "_blank");
-    }, 300);
+        </div>
 
 
-    form.reset();
+        <!-- HERO CARD -->
 
-  });
+        <div class="hero-visual reveal">
 
-});
+          <div class="glow"></div>
+
+          <div class="house-card">
+
+            <div class="card-top">
+              <div>
+                <span class="small-label">اشتراكك الحالي</span>
+                <h3>Taf2na Home</h3>
+              </div>
+
+              <div class="status">
+                <span></span>
+                Active
+              </div>
+            </div>
 
 
-<script src="script.js"></script>
+            <div class="price-big">
+              <span>$</span>50
+              <small>/ شهر</small>
+            </div>
+
+
+            <div class="progress-box">
+
+              <div class="progress-header">
+                <span>الزيارات المستخدمة</span>
+                <strong>0 / 2</strong>
+              </div>
+
+              <div class="progress">
+                <span></span>
+              </div>
+
+            </div>
+
+
+            <div class="included-list">
+
+              <div>
+                <span class="check">✓</span>
+                زيارة صيانة
+              </div>
+
+              <div>
+                <span class="check">✓</span>
+                أجرة اليد العاملة
+              </div>
+
+              <div>
+                <span class="check">✓</span>
+                كهرباء وسباكة
+              </div>
+
+              <div>
+                <span class="check">✓</span>
+                نجارة وحدادة
+              </div>
+
+            </div>
+
+
+            <a href="#subscribe" class="card-btn">
+              اطلب أول زيارة
+              <span>←</span>
+            </a>
+
+          </div>
+
+          <div class="floating-card floating-one">
+            🔧
+            <div>
+              <strong>صيانة</strong>
+              <small>بكل سهولة</small>
+            </div>
+          </div>
+
+          <div class="floating-card floating-two">
+            <strong>24/7</strong>
+            <small>تواصل معنا</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= SERVICES ================= -->
+
+    <section class="section" id="services">
+
+      <div class="container">
+
+        <div class="section-heading reveal">
+
+          <div class="eyebrow">
+            خدماتنا
+          </div>
+
+          <h2>
+            كل بيت عنده مشاكل...
+            <span>نحنا منحلّها.</span>
+          </h2>
+
+          <p>
+            خدمات صيانة منزلية أساسية باشتراك واحد،
+            بدون ما تضطر تفتّش كل مرة على شخص جديد.
+          </p>
+
+        </div>
+
+
+        <div class="services-grid">
+
+          <article class="service-card reveal">
+            <div class="service-icon">⚡</div>
+            <h3>كهرباء</h3>
+            <p>أعطال، مفاتيح، أفياش، إنارة ومشاكل كهربائية منزلية.</p>
+            <span>01</span>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">💧</div>
+            <h3>سباكة</h3>
+            <p>تسريب مياه، حنفيات، مصارف ومشاكل السباكة اليومية.</p>
+            <span>02</span>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🪚</div>
+            <h3>نجارة</h3>
+            <p>أبواب، خزائن، مفصلات وتصليحات النجارة المنزلية.</p>
+            <span>03</span>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🔩</div>
+            <h3>حدادة</h3>
+            <p>تصليحات معدنية وأعمال حدادة منزلية بسيطة.</p>
+            <span>04</span>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🚪</div>
+            <h3>أبواب وخزائن</h3>
+            <p>ضبط، تركيب وتصليح الأبواب والخزائن.</p>
+            <span>05</span>
+          </article>
+
+          <article class="service-card reveal">
+            <div class="service-icon">🏠</div>
+            <h3>صيانة عامة</h3>
+            <p>مشاكل الصيانة اليومية المختلفة داخل المنزل.</p>
+            <span>06</span>
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= HOW IT WORKS ================= -->
+
+    <section class="how-section" id="how">
+
+      <div class="container">
+
+        <div class="section-heading center reveal">
+
+          <div class="eyebrow">
+            بسيطة جداً
+          </div>
+
+          <h2>
+            3 خطوات...
+            <span>وخلص.</span>
+          </h2>
+
+        </div>
+
+
+        <div class="steps">
+
+          <div class="step reveal">
+
+            <div class="step-number">01</div>
+
+            <div>
+              <h3>اشترك</h3>
+              <p>
+                اشترك بخطة Taf2na الشهرية بقيمة $50.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div class="step reveal">
+
+            <div class="step-number">02</div>
+
+            <div>
+              <h3>اطلب زيارة</h3>
+              <p>
+                تواصل معنا وحدد المشكلة والوقت المناسب.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div class="step reveal">
+
+            <div class="step-number">03</div>
+
+            <div>
+              <h3>نحنا منجي</h3>
+              <p>
+                الفني بيجي لعندك وبيتعامل مع المشكلة.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= PRICING ================= -->
+
+    <section class="pricing-section" id="pricing">
+
+      <div class="container pricing-grid">
+
+        <div class="pricing-copy reveal">
+
+          <div class="eyebrow">
+            اشتراك Taf2na
+          </div>
+
+          <h2>
+            صيانة بيتك،
+            <span>بسعر واحد.</span>
+          </h2>
+
+          <p>
+            ما بقى كل مشكلة تعني فاتورة جديدة لأجرة الفني.
+            مع Taf2na، عندك زيارتين صيانة شهرياً ضمن الاشتراك.
+          </p>
+
+          <div class="mini-note">
+            <span>✓</span>
+            مناسب للصيانة المنزلية اليومية
+          </div>
+
+          <div class="mini-note">
+            <span>✓</span>
+            ما في داعي تدور على فني كل مرة
+          </div>
+
+        </div>
+
+
+        <div class="pricing-card reveal">
+
+          <div class="popular">
+            Taf2na Home
+          </div>
+
+          <div class="pricing-title">
+            <span>الاشتراك الشهري</span>
+          </div>
+
+          <div class="pricing-number">
+            <span>$</span>50
+            <small>/ شهر</small>
+          </div>
+
+          <div class="pricing-divider"></div>
+
+          <ul>
+
+            <li>
+              <span>✓</span>
+              زيارتين صيانة شهرياً
+            </li>
+
+            <li>
+              <span>✓</span>
+              أجرة الزيارة
+            </li>
+
+            <li>
+              <span>✓</span>
+              أجرة اليد العاملة
+            </li>
+
+            <li>
+              <span>✓</span>
+              كهرباء + سباكة + نجارة
+            </li>
+
+            <li>
+              <span>✓</span>
+              حدادة + أبواب + صيانة عامة
+            </li>
+
+            <li class="not-included">
+              <span>×</span>
+              قطع الغيار والمواد غير مشمولة
+            </li>
+
+          </ul>
+
+          <a href="#subscribe" class="btn btn-primary full">
+            اشترك هلّق
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= PAYMENT ================= -->
+
+    <section class="payment-section">
+
+      <div class="container">
+
+        <div class="payment-card reveal">
+
+          <div class="payment-icon">
+            💳
+          </div>
+
+          <div class="payment-content">
+
+            <span class="small-label">
+              طريقة الدفع
+            </span>
+
+            <h2>
+              ادفع بسهولة عبر
+              <span>Whish Money</span>
+            </h2>
+
+            <p>
+              لتحويل الاشتراك، أرسل مبلغ <strong>$50</strong>
+              عبر Whish Money على الرقم:
+            </p>
+
+            <div class="payment-number">
+              76 950 998
+            </div>
+
+            <small>
+              بعد التحويل، ابعتلنا صورة التحويل على WhatsApp
+              لتأكيد الاشتراك.
+            </small>
+
+          </div>
+
+          <a
+            href="https://wa.me/96176950998"
+            class="whatsapp-btn"
+            target="_blank"
+          >
+            WhatsApp
+            <span>↗</span>
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= RULES ================= -->
+
+    <section class="section rules-section">
+
+      <div class="container">
+
+        <div class="section-heading reveal">
+
+          <div class="eyebrow">
+            واضح من الأول
+          </div>
+
+          <h2>
+            شو داخل بالاشتراك؟
+            <span>وشو لأ؟</span>
+          </h2>
+
+        </div>
+
+
+        <div class="rules-grid">
+
+          <div class="rule-box included reveal">
+
+            <div class="rule-title">
+              <span>✓</span>
+              مشمول
+            </div>
+
+            <ul>
+              <li>زيارتان شهرياً</li>
+              <li>أجرة الزيارة</li>
+              <li>أجرة اليد العاملة</li>
+              <li>أعمال الصيانة المنزلية العادية</li>
+              <li>الخدمات المذكورة ضمن Taf2na</li>
+            </ul>
+
+          </div>
+
+
+          <div class="rule-box excluded reveal">
+
+            <div class="rule-title">
+              <span>×</span>
+              غير مشمول
+            </div>
+
+            <ul>
+              <li>قطع الغيار والمواد</li>
+              <li>أعمال البناء والترميم الكبيرة</li>
+              <li>المشاريع الكبيرة</li>
+              <li>أعمال خارج نطاق الصيانة العادية</li>
+              <li>أي عمل إضافي بعد موافقة العميل</li>
+            </ul>
+
+          </div>
+
+        </div>
+
+        <div class="important-note reveal">
+          <strong>ملاحظة:</strong>
+          مدة كل زيارة ونطاق الأعمال يحددان ضمن شروط الاشتراك،
+          حتى تكون الخدمة عادلة وواضحة للعميل ولفريق Taf2na.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= FAQ ================= -->
+
+    <section class="faq-section" id="faq">
+
+      <div class="container">
+
+        <div class="section-heading center reveal">
+
+          <div class="eyebrow">
+            FAQ
+          </div>
+
+          <h2>
+            عندك سؤال؟
+            <span>هيدا الجواب.</span>
+          </h2>
+
+        </div>
+
+
+        <div class="faq-list">
+
+          <div class="faq-item reveal">
+
+            <button class="faq-question">
+              شو بيشمل اشتراك $50؟
+              <span>+</span>
+            </button>
+
+            <div class="faq-answer">
+              الاشتراك بيشمل زيارتين صيانة بالشهر، بالإضافة
+              لأجرة الزيارة وأجرة اليد العاملة ضمن نطاق الخدمات المحددة.
+            </div>
+
+          </div>
+
+
+          <div class="faq-item reveal">
+
+            <button class="faq-question">
+              قطع الغيار داخلة بالسعر؟
+              <span>+</span>
+            </button>
+
+            <div class="faq-answer">
+              لا. قطع الغيار والمواد المطلوبة للإصلاح بتكون على حساب العميل.
+            </div>
+
+          </div>
+
+
+          <div class="faq-item reveal">
+
+            <button class="faq-question">
+              فيني استخدم الزيارتين بأي وقت؟
+              <span>+</span>
+            </button>
+
+            <div class="faq-answer">
+              نعم، بتتواصل معنا وقت تحتاج زيارة، وبننسق معك حسب المواعيد المتاحة.
+            </div>
+
+          </div>
+
+
+          <div class="faq-item reveal">
+
+            <button class="faq-question">
+              إذا ما استخدمت زيارة هالشهر، بتنتقل للشهر الجايي؟
+              <span>+</span>
+            </button>
+
+            <div class="faq-answer">
+              لا، الزيارات غير المستخدمة لا تنتقل تلقائياً للشهر التالي.
+            </div>
+
+          </div>
+
+
+          <div class="faq-item reveal">
+
+            <button class="faq-question">
+              كيف بدفع الاشتراك؟
+              <span>+</span>
+            </button>
+
+            <div class="faq-answer">
+              الدفع حالياً عبر Whish Money على الرقم
+              <strong>76 950 998</strong>.
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="final-cta" id="subscribe">
+
+      <div class="container">
+
+        <div class="cta-card reveal">
+
+          <div class="cta-content">
+
+            <div class="eyebrow">
+              جاهز ترتاح؟
+            </div>
+
+            <h2>
+              خلّي صيانة بيتك
+              <span>علينا.</span>
+            </h2>
+
+            <p>
+              سجّل معلوماتك وهلّق منرجع منتواصل معك لتأكيد الاشتراك.
+            </p>
+
+          </div>
+
+
+          <form id="subscribeForm" class="subscribe-form">
+
+            <div class="input-group">
+              <label>الاسم</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="مثلاً: John Doe"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>رقم الهاتف</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="03 123 456"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>المنطقة</label>
+              <input
+                type="text"
+                id="area"
+                placeholder="مثلاً: بعبدا"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label>شو المشكلة؟</label>
+              <textarea
+                id="issue"
+                placeholder="اكتب لنا المشكلة باختصار..."
+                rows="4"
+              ></textarea>
+            </div>
+
+            <button class="btn btn-primary submit-btn" type="submit">
+              طلب الاشتراك
+              <span>←</span>
+            </button>
+
+            <div class="form-success" id="formSuccess">
+              ✓ وصلت معلوماتك! رح نتواصل معك قريباً.
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer>
+
+    <div class="container footer-inner">
+
+      <div class="footer-brand">
+
+        <a href="#" class="logo">
+          <span class="logo-mark">T</span>
+          <span>Taf<span>2</span>na</span>
+        </a>
+
+        <p>
+          صيانة بيتك، من دون وجع راس.
+        </p>
+
+      </div>
+
+
+      <div class="footer-contact">
+
+        <a href="tel:+96176950998">
+          📞 76 950 998
+        </a>
+
+        <a
+          href="https://wa.me/96176950998"
+          target="_blank"
+        >
+          💬 WhatsApp
+        </a>
+
+      </div>
+
+
+      <div class="footer-bottom">
+        © <span id="year"></span> Taf2na. All rights reserved.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="script.js"></script>
 
 </body>
 </html>
