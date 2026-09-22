@@ -1,530 +1,188 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+const PLAN_DATA = {
+  Home: {
+    name: "Taf2na Home",
+    price: 50,
+    visits: 2,
+    maxSize: 150
+  },
 
-:root {
-  --navy: #07111f;
-  --navy2: #0d1b2d;
-  --yellow: #ffd43b;
-  --white: #ffffff;
-  --muted: #8d9bad;
-  --border: rgba(255,255,255,.09);
-  --card: rgba(255,255,255,.045);
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Cairo', sans-serif;
-  background: var(--navy);
-  color: var(--white);
-  line-height: 1.8;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.navbar {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 7%;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: rgba(7,17,31,.92);
-  backdrop-filter: blur(15px);
-  border-bottom: 1px solid var(--border);
-}
-
-.logo,
-.footer-logo {
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: -1px;
-}
-
-.logo span,
-.footer-logo span {
-  color: var(--yellow);
-}
-
-nav {
-  display: flex;
-  gap: 30px;
-}
-
-nav a {
-  color: #b9c2ce;
-  font-size: 14px;
-  transition: .2s;
-}
-
-nav a:hover {
-  color: var(--yellow);
-}
-
-.nav-btn {
-  background: var(--yellow);
-  color: #111;
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 14px;
-}
-
-.hero {
-  min-height: 700px;
-  padding: 100px 7%;
-  display: grid;
-  grid-template-columns: 1.25fr .75fr;
-  gap: 70px;
-  align-items: center;
-  background:
-    radial-gradient(circle at 75% 30%, rgba(255,212,59,.11), transparent 30%),
-    radial-gradient(circle at 10% 80%, rgba(38,93,151,.16), transparent 30%);
-}
-
-.badge,
-.section-title span,
-.rules-box span,
-.subscribe-box span {
-  color: var(--yellow);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 2px;
-}
-
-.hero h1 {
-  font-size: clamp(50px, 7vw, 86px);
-  line-height: 1.05;
-  margin: 20px 0;
-  letter-spacing: -3px;
-}
-
-.hero h1 span {
-  color: var(--yellow);
-  display: block;
-}
-
-.hero-content p {
-  max-width: 650px;
-  color: var(--muted);
-  font-size: 19px;
-  margin-bottom: 35px;
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 14px 25px;
-  border-radius: 12px;
-  font-weight: 800;
-}
-
-.primary {
-  background: var(--yellow);
-  color: #111;
-}
-
-.secondary {
-  border: 1px solid var(--border);
-  background: var(--card);
-}
-
-.hero-card {
-  padding: 35px;
-  border-radius: 25px;
-  background: linear-gradient(145deg, #13253b, #091522);
-  border: 1px solid rgba(255,212,59,.28);
-  box-shadow: 0 25px 80px rgba(0,0,0,.3);
-}
-
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  color: var(--yellow);
-  font-weight: 800;
-}
-
-.popular {
-  font-size: 10px;
-  padding: 3px 8px;
-  border: 1px solid var(--yellow);
-  border-radius: 30px;
-}
-
-.hero-card h2 {
-  font-size: 52px;
-  margin: 20px 0 0;
-}
-
-.hero-card h2 span {
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.hero-card p {
-  color: var(--muted);
-}
-
-.mini-line {
-  height: 1px;
-  background: var(--border);
-  margin: 25px 0;
-}
-
-.hero-card div:not(.card-top):not(.mini-line) {
-  margin: 12px 0;
-  color: #dce3eb;
-}
-
-.section {
-  padding: 110px 7%;
-}
-
-.section-title {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.section-title h2 {
-  font-size: 42px;
-  margin: 10px 0;
-}
-
-.section-title p {
-  color: var(--muted);
-}
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.service-card {
-  padding: 35px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  transition: .25s;
-}
-
-.service-card:hover {
-  transform: translateY(-5px);
-  border-color: rgba(255,212,59,.35);
-}
-
-.icon {
-  font-size: 32px;
-  margin-bottom: 15px;
-}
-
-.service-card h3 {
-  font-size: 21px;
-}
-
-.service-card p {
-  color: var(--muted);
-  margin-top: 5px;
-}
-
-.plans {
-  background: #091522;
-}
-
-.plans-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 25px;
-  max-width: 950px;
-  margin: auto;
-}
-
-.plan-card {
-  position: relative;
-  padding: 40px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 25px;
-}
-
-.premium-plan {
-  border-color: rgba(255,212,59,.45);
-  background: linear-gradient(145deg, rgba(255,212,59,.08), rgba(255,255,255,.03));
-}
-
-.premium-label {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: var(--yellow);
-  color: #111;
-  font-size: 10px;
-  padding: 4px 10px;
-  border-radius: 30px;
-  font-weight: 900;
-}
-
-.plan-name {
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.price {
-  font-size: 54px;
-  font-weight: 900;
-  margin: 15px 0 0;
-}
-
-.price small {
-  font-size: 14px;
-  color: var(--muted);
-}
-
-.area {
-  color: var(--yellow);
-  margin-bottom: 25px;
-}
-
-.plan-card ul {
-  list-style: none;
-  color: #c8d0da;
-}
-
-.plan-card li {
-  padding: 8px 0;
-}
-
-.plan-btn {
-  width: 100%;
-  margin-top: 25px;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: 800;
-}
-
-.premium-btn {
-  background: var(--yellow);
-  color: #111;
-  border-color: var(--yellow);
-}
-
-.steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.step {
-  padding: 30px;
-  border-top: 2px solid var(--yellow);
-  background: var(--card);
-}
-
-.step strong {
-  font-size: 42px;
-  color: var(--yellow);
-}
-
-.step p {
-  color: var(--muted);
-}
-
-.rules-box {
-  max-width: 1100px;
-  margin: auto;
-  padding: 45px;
-  display: grid;
-  grid-template-columns: .8fr 1.2fr;
-  gap: 50px;
-  border-radius: 25px;
-  background: #0c1b2c;
-  border: 1px solid var(--border);
-}
-
-.rules-box h2 {
-  margin-top: 10px;
-  font-size: 32px;
-}
-
-.rules-list p {
-  padding: 7px 0;
-  color: #cbd3dd;
-}
-
-.subscribe {
-  background:
-    radial-gradient(circle at 70% 20%, rgba(255,212,59,.08), transparent 30%);
-}
-
-.subscribe-box {
-  max-width: 1100px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 70px;
-  align-items: start;
-}
-
-.subscribe-box h2 {
-  font-size: 42px;
-  line-height: 1.2;
-  margin: 12px 0;
-}
-
-.subscribe-box > div:first-child > p {
-  color: var(--muted);
-}
-
-.payment,
-.contact {
-  margin-top: 25px;
-  padding: 18px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-}
-
-.payment strong,
-.contact {
-  display: block;
-}
-
-.payment b,
-.contact b {
-  color: var(--yellow);
-  display: block;
-  font-size: 22px;
-  margin-top: 4px;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-label {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #cbd3dd;
-}
+  Premium: {
+    name: "Taf2na Premium",
+    price: 120,
+    visits: 4,
+    minSize: 150
+  }
+};
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 14px;
-  background: #0b1827;
-  color: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  outline: none;
-  font-family: inherit;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--yellow);
-}
-
-.submit-btn {
-  margin-top: 15px;
-  padding: 15px;
-  border: 0;
-  border-radius: 12px;
-  background: var(--yellow);
-  color: #111;
-  font-family: inherit;
-  font-weight: 900;
-  cursor: pointer;
-}
+function selectPlan(planName) {
+  const planSelect = document.getElementById("plan");
 
-.success-message {
-  color: #8df0a9;
-  text-align: center;
-  min-height: 25px;
-}
+  if (!planSelect) return;
 
-footer {
-  padding: 50px 7%;
-  border-top: 1px solid var(--border);
-  text-align: center;
-}
+  planSelect.value = planName;
 
-footer p,
-footer small {
-  color: var(--muted);
+  document.getElementById("subscribe")
+    ?.scrollIntoView({
+      behavior: "smooth"
+    });
 }
 
-.footer-contact {
-  margin: 8px 0;
-}
 
-.footer-contact a {
-  color: var(--yellow);
-}
+document.addEventListener("DOMContentLoaded", () => {
 
-@media(max-width: 850px) {
+  const form = document.getElementById("subscribeForm");
 
-  .navbar {
-    padding: 0 5%;
+  if (!form) {
+    console.error("subscribeForm not found");
+    return;
   }
 
-  nav {
-    display: none;
-  }
+  form.addEventListener("submit", function (event) {
 
-  .nav-btn {
-    padding: 8px 13px;
-  }
+    event.preventDefault();
 
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 70px 5%;
-  }
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const area = document.getElementById("area").value.trim();
+    const size = Number(document.getElementById("size").value);
+    const planName = document.getElementById("plan").value;
+    const issue = document.getElementById("issue").value.trim();
 
-  .hero h1 {
-    font-size: 55px;
-  }
+    const success = document.getElementById("successMessage");
 
-  .services-grid,
-  .plans-grid,
-  .steps,
-  .subscribe-box,
-  .rules-box {
-    grid-template-columns: 1fr;
-  }
+    if (!name || !phone || !area || !size || !planName) {
+      success.textContent = "رجاءً عبّي كل المعلومات المطلوبة.";
+      success.style.color = "#ff7777";
+      return;
+    }
 
-  .section {
-    padding: 80px 5%;
-  }
+    const plan = PLAN_DATA[planName];
 
-  .section-title h2 {
-    font-size: 32px;
-  }
+    if (!plan) {
+      success.textContent = "الخطة غير صحيحة.";
+      success.style.color = "#ff7777";
+      return;
+    }
 
+    // التحقق من مساحة البيت
+    if (planName === "Home" && size > 150) {
+      success.textContent =
+        "خطة Home للبيوت لحد 150 م². اختار Premium.";
+      success.style.color = "#ff7777";
+      return;
+    }
+
+    if (planName === "Premium" && size <= 150) {
+      success.textContent =
+        "خطة Premium للبيوت فوق 150 م².";
+      success.style.color = "#ff7777";
+      return;
+    }
+
+
+    const request = {
+      id: "REQ-" + Date.now(),
+
+      customer: {
+        name: name,
+        phone: phone,
+        area: area,
+        houseSize: size,
+        issue: issue
+      },
+
+      plan: {
+        name: plan.name,
+        price: plan.price,
+        visitsIncluded: plan.visits
+      },
+
+      paymentStatus: "Pending",
+      subscriptionStatus: "New Request",
+
+      visitsUsed: 0,
+      visitsRemaining: plan.visits,
+
+      startDate: null,
+      expiryDate: null,
+
+      createdAt: new Date().toISOString()
+    };
+
+
+    // حفظ الطلب
+    try {
+
+      const requests = JSON.parse(
+        localStorage.getItem("taf2naRequests") || "[]"
+      );
+
+      requests.push(request);
+
+      localStorage.setItem(
+        "taf2naRequests",
+        JSON.stringify(requests)
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+      success.textContent =
+        "صار خطأ بحفظ الطلب. جرّب مرة ثانية.";
+
+      success.style.color = "#ff7777";
+
+      return;
+    }
+
+
+    // رسالة WhatsApp
+    const message =
+`Taf2na - New Subscription Request
+
+Request ID: ${request.id}
+
+Name: ${name}
+Phone: ${phone}
+Area: ${area}
+House Size: ${size} m²
+
+Plan: ${plan.name}
+Price: $${plan.price}
+Visits: ${plan.visits}
+
+Issue:
+${issue || "N/A"}
+
+Payment:
+Whish Money - 03 950 998`;
+
+
+    const whatsappURL =
+      "https://wa.me/96176950998?text=" +
+      encodeURIComponent(message);
+
+
+    success.innerHTML =
+      `تم إرسال طلبك بنجاح ✓<br>
+       رقم الطلب: <b>${request.id}</b><br>
+       رح نتواصل معك لتأكيد الدفع.`;
+
+    success.style.color = "#8df0a9";
+
+
+    // افتح WhatsApp بعد نجاح حفظ الطلب
+    setTimeout(() => {
+      window.open(whatsappURL, "_blank");
+    }, 300);
+
+
+    form.reset();
+
+  });
+
+});
   .rules-box {
     gap: 25px;
   }
