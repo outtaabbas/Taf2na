@@ -1,325 +1,188 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Taf2na | صيانة بيتك علينا</title>
-  <link rel="stylesheet" href="taf2na.css">
-</head>
-
-<body>
-
-<header class="navbar">
-  <div class="logo">Taf<span>2</span>na</div>
-
-  <nav id="nav">
-    <a href="#home">الرئيسية</a>
-    <a href="#services">الخدمات</a>
-    <a href="#plans">الاشتراكات</a>
-    <a href="#how">كيف بتشتغل؟</a>
-    <a href="#contact">تواصل معنا</a>
-  </nav>
-
-  <a class="nav-btn" href="#subscribe">اشترك هلّق</a>
-</header>
-
-<main>
-
-<section class="hero" id="home">
-  <div class="hero-content">
-    <span class="badge">HOME MAINTENANCE • LEBANON</span>
-
-    <h1>
-      بيتك بدّو صيانة؟
-      <span>Taf2na.</span>
-    </h1>
-
-    <p>
-      صيانة بيتك، من دون وجع راس.
-      اشترك بخطة شهرية وخلي مشاكل البيت علينا.
-    </p>
-
-    <div class="hero-buttons">
-      <a href="#plans" class="btn primary">شوف الاشتراكات</a>
-      <a href="https://wa.me/96176950998" class="btn secondary">
-        WhatsApp
-      </a>
-    </div>
-  </div>
-
-  <div class="hero-card">
-    <div class="card-top">
-      <span>Premium</span>
-      <span class="popular">POPULAR</span>
-    </div>
-
-    <h2>$120<span>/month</span></h2>
-
-    <p>للبيوت فوق 150 م²</p>
-
-    <div class="mini-line"></div>
-
-    <div>✓ 4 زيارات بالشهر</div>
-    <div>✓ Labor + Visit Fee</div>
-    <div>✓ متابعة وأولوية بالحجز</div>
-    <div>✓ تسجيل كل الزيارات</div>
-  </div>
-</section>
-
-
-<section class="section" id="services">
-  <div class="section-title">
-    <span>WHAT WE FIX</span>
-    <h2>كل مشاكل البيت تقريباً</h2>
-    <p>من شغلة صغيرة لشغلة صيانة عادية، Taf2na جاهزة.</p>
-  </div>
-
-  <div class="services-grid">
-
-    <div class="service-card">
-      <div class="icon">⚡</div>
-      <h3>كهرباء</h3>
-      <p>أعطال كهرباء وصيانة منزلية عامة.</p>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">🚰</div>
-      <h3>سباكة</h3>
-      <p>تسريب، حنفيات، تمديدات وأعمال صيانة.</p>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">🔧</div>
-      <h3>حدادة</h3>
-      <p>تصليحات وأعمال معدنية منزلية.</p>
-    </div>
-
-    <div class="service-card">
-      <div class="icon">🪚</div>
-      <h3>نجارة</h3>
-      <p>أبواب، خزائن وتصليحات خشب.</p>
-    </div>
+const PLAN_DATA = {
+  Home: {
+    name: "Taf2na Home",
+    price: 50,
+    visits: 2,
+    maxSize: 150
+  },
+
+  Premium: {
+    name: "Taf2na Premium",
+    price: 120,
+    visits: 4,
+    minSize: 150
+  }
+};
 
-    <div class="service-card">
-      <div class="icon">🏠</div>
-      <h3>صيانة عامة</h3>
-      <p>أي شغلة صيانة منزلية ضمن نطاق الاشتراك.</p>
-    </div>
+function selectPlan(planName) {
+  const planSelect = document.getElementById("plan");
+
+  if (!planSelect) return;
 
-    <div class="service-card">
-      <div class="icon">🛠️</div>
-      <h3>أعمال منزلية</h3>
-      <p>منساعدك بالمشاكل اليومية المعتادة بالبيت.</p>
-    </div>
+  planSelect.value = planName;
 
-  </div>
-</section>
+  document.getElementById("subscribe")
+    ?.scrollIntoView({
+      behavior: "smooth"
+    });
+}
 
 
-<section class="plans section" id="plans">
+document.addEventListener("DOMContentLoaded", () => {
 
-  <div class="section-title">
-    <span>PLANS</span>
-    <h2>اختار الاشتراك المناسب لبيتك</h2>
-  </div>
+  const form = document.getElementById("subscribeForm");
 
-  <div class="plans-grid">
+  if (!form) {
+    console.error("subscribeForm not found");
+    return;
+  }
 
-    <div class="plan-card">
-      <div class="plan-name">Taf2na Home</div>
+  form.addEventListener("submit", function (event) {
 
-      <div class="price">
-        $50 <small>/ month</small>
-      </div>
+    event.preventDefault();
 
-      <p class="area">لحد 150 م²</p>
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const area = document.getElementById("area").value.trim();
+    const size = Number(document.getElementById("size").value);
+    const planName = document.getElementById("plan").value;
+    const issue = document.getElementById("issue").value.trim();
 
-      <ul>
-        <li>✓ 2 visits بالشهر</li>
-        <li>✓ Labor شامل</li>
-        <li>✓ Visit fee شامل</li>
-        <li>✓ تسجيل الزيارات</li>
-        <li>✓ صيانة منزلية عامة</li>
-      </ul>
+    const success = document.getElementById("successMessage");
 
-      <button class="plan-btn" onclick="selectPlan('Home')">
-        اختار Home
-      </button>
-    </div>
+    if (!name || !phone || !area || !size || !planName) {
+      success.textContent = "رجاءً عبّي كل المعلومات المطلوبة.";
+      success.style.color = "#ff7777";
+      return;
+    }
 
+    const plan = PLAN_DATA[planName];
 
-    <div class="plan-card premium-plan">
+    if (!plan) {
+      success.textContent = "الخطة غير صحيحة.";
+      success.style.color = "#ff7777";
+      return;
+    }
 
-      <div class="premium-label">PREMIUM</div>
+    // التحقق من مساحة البيت
+    if (planName === "Home" && size > 150) {
+      success.textContent =
+        "خطة Home للبيوت لحد 150 م². اختار Premium.";
+      success.style.color = "#ff7777";
+      return;
+    }
 
-      <div class="plan-name">Taf2na Premium</div>
+    if (planName === "Premium" && size <= 150) {
+      success.textContent =
+        "خطة Premium للبيوت فوق 150 م².";
+      success.style.color = "#ff7777";
+      return;
+    }
 
-      <div class="price">
-        $120 <small>/ month</small>
-      </div>
 
-      <p class="area">للبيوت فوق 150 م²</p>
+    const request = {
+      id: "REQ-" + Date.now(),
 
-      <ul>
-        <li>✓ 4 visits بالشهر</li>
-        <li>✓ Labor شامل</li>
-        <li>✓ Visit fee شامل</li>
-        <li>✓ أولوية بالحجز</li>
-        <li>✓ متابعة WhatsApp</li>
-        <li>✓ Maintenance record</li>
-      </ul>
+      customer: {
+        name: name,
+        phone: phone,
+        area: area,
+        houseSize: size,
+        issue: issue
+      },
 
-      <button class="plan-btn premium-btn" onclick="selectPlan('Premium')">
-        اختار Premium
-      </button>
-    </div>
+      plan: {
+        name: plan.name,
+        price: plan.price,
+        visitsIncluded: plan.visits
+      },
 
-  </div>
-</section>
+      paymentStatus: "Pending",
+      subscriptionStatus: "New Request",
 
+      visitsUsed: 0,
+      visitsRemaining: plan.visits,
 
-<section class="how section" id="how">
+      startDate: null,
+      expiryDate: null,
 
-  <div class="section-title">
-    <span>HOW IT WORKS</span>
-    <h2>3 خطوات وبس</h2>
-  </div>
+      createdAt: new Date().toISOString()
+    };
 
-  <div class="steps">
 
-    <div class="step">
-      <strong>01</strong>
-      <h3>اختار الخطة</h3>
-      <p>Home أو Premium حسب مساحة بيتك.</p>
-    </div>
+    // حفظ الطلب
+    try {
 
-    <div class="step">
-      <strong>02</strong>
-      <h3>حوّل عبر Whish</h3>
-      <p>
-        Whish Money:
-        <b>03 950 998</b>
-      </p>
-    </div>
+      const requests = JSON.parse(
+        localStorage.getItem("taf2naRequests") || "[]"
+      );
 
-    <div class="step">
-      <strong>03</strong>
-      <h3>منفعّل اشتراكك</h3>
-      <p>بعد تأكيد الدفع، بيبلّش الاشتراك.</p>
-    </div>
+      requests.push(request);
 
-  </div>
+      localStorage.setItem(
+        "taf2naRequests",
+        JSON.stringify(requests)
+      );
 
-</section>
+    } catch (error) {
 
+      console.error(error);
 
-<section class="rules section">
+      success.textContent =
+        "صار خطأ بحفظ الطلب. جرّب مرة ثانية.";
 
-  <div class="rules-box">
+      success.style.color = "#ff7777";
 
-    <div>
-      <span>IMPORTANT</span>
-      <h2>شو مشمول وشو مش مشمول؟</h2>
-    </div>
+      return;
+    }
 
-    <div class="rules-list">
-      <p>✓ Labor وVisit Fee ضمن الاشتراك.</p>
-      <p>✓ عدد الزيارات حسب الخطة.</p>
-      <p>✕ قطع الغيار والمواد على حساب الزبون.</p>
-      <p>✕ الأعمال الكبيرة والـrenovation مش ضمن الاشتراك.</p>
-      <p>✕ الزيارات غير المستخدمة ما بتنتقل للشهر التالي.</p>
-      <p>✓ الزيارات الإضافية ممكنة بعد موافقة الزبون.</p>
-    </div>
 
-  </div>
+    // رسالة WhatsApp
+    const message =
+`Taf2na - New Subscription Request
 
-</section>
+Request ID: ${request.id}
 
+Name: ${name}
+Phone: ${phone}
+Area: ${area}
+House Size: ${size} m²
 
-<section class="subscribe section" id="subscribe">
+Plan: ${plan.name}
+Price: $${plan.price}
+Visits: ${plan.visits}
 
-  <div class="subscribe-box">
+Issue:
+${issue || "N/A"}
 
-    <div>
-      <span>JOIN TAF2NA</span>
-      <h2>خلّي صيانة بيتك علينا.</h2>
-      <p>
-        عبّي المعلومات، وبعدها منواصل معك لتأكيد الاشتراك والدفع.
-      </p>
+Payment:
+Whish Money - 03 950 998`;
 
-      <div class="payment">
-        <strong>Whish Money</strong>
-        <b>03 950 998</b>
-      </div>
 
-      <div class="contact">
-        Contact / WhatsApp:
-      </div>
-      <b>76 950 998</b>
-       <b>03 950 998</b>
-    </div>
+    const whatsappURL =
+      "https://wa.me/96176950998?text=" +
+      encodeURIComponent(message);
 
 
-    <form id="subscribeForm">
+    success.innerHTML =
+      `تم إرسال طلبك بنجاح ✓<br>
+       رقم الطلب: <b>${request.id}</b><br>
+       رح نتواصل معك لتأكيد الدفع.`;
 
-      <label>الاسم الكامل</label>
-      <input id="name" required placeholder="مثلاً: John Doe">
+    success.style.color = "#8df0a9";
 
-      <label>رقم الهاتف</label>
-      <input id="phone" required placeholder="03 123 456">
 
-      <label>المنطقة</label>
-      <input id="area" required placeholder="مثلاً: Baabda">
+    // افتح WhatsApp بعد نجاح حفظ الطلب
+    setTimeout(() => {
+      window.open(whatsappURL, "_blank");
+    }, 300);
 
-      <!-- <label>مساحة البيت</label>
-      <input id="size" type="number" required placeholder="مثلاً: 180"> -->
 
-      <label>الخطة</label>
-      <select id="plan" required>
-        <option value="">اختار الخطة</option>
-        <option value="Home">Taf2na Home — $50</option>
-        <option value="Premium">Taf2na Premium — $120</option>
-      </select>
+    form.reset();
 
-      <label>شو المشكلة بالبيت؟</label>
-      <textarea id="issue" rows="4"
-        placeholder="اكتب المشكلة أو نوع الصيانة المطلوبة"></textarea>
+  });
 
-      <button type="submit" class="submit-btn">
-        إرسال طلب الاشتراك
-      </button>
-
-      <p id="successMessage" class="success-message"></p>
-
-    </form>
-
-  </div>
-
-</section>
-
-</main>
-
-
-<footer id="contact">
-
-  <div class="footer-logo">Taf<span>2</span>na</div>
-
-  <p>صيانة بيتك، من دون وجع راس.</p>
-
-  <div class="footer-contact">
-    WhatsApp:
-    <div><b><a href="https://wa.me/96176950998">76 950 998</a></b></div>
-    <div><b><a href="https://wa.me/96103950998">03 950 998</a></b></div>
-  </div>
-
-  <div class="footer-contact">
-    Whish Money:
-    <b>03 950 998</b>
-  </div>
-
-  <small>© 2026 Taf2na. All rights reserved.</small>
-
-</footer>
+});
 
 
 <script src="script.js"></script>
