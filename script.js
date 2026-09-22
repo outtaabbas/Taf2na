@@ -1,188 +1,150 @@
-const PLAN_DATA = {
-  Home: {
-    name: "Taf2na Home",
-    price: 50,
-    visits: 2,
-    maxSize: 150
-  },
-
-  Premium: {
-    name: "Taf2na Premium",
-    price: 120,
-    visits: 4,
-    minSize: 150
-  }
-};
-
-function selectPlan(planName) {
-  const planSelect = document.getElementById("plan");
-
-  if (!planSelect) return;
-
-  planSelect.value = planName;
-
-  document.getElementById("subscribe")
-    ?.scrollIntoView({
-      behavior: "smooth"
-    });
-}
+/* =========================================================
+   TAF2NA JAVASCRIPT
+========================================================= */
 
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ================= MOBILE MENU ================= */
 
-  const form = document.getElementById("subscribeForm");
+const menuBtn = document.getElementById("menuBtn");
+const mobileMenu = document.getElementById("mobileMenu");
 
-  if (!form) {
-    console.error("subscribeForm not found");
-    return;
-  }
+menuBtn.addEventListener("click", () => {
+  mobileMenu.classList.toggle("active");
 
-  form.addEventListener("submit", function (event) {
-
-    event.preventDefault();
-
-    const name = document.getElementById("name").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const area = document.getElementById("area").value.trim();
-    const size = Number(document.getElementById("size").value);
-    const planName = document.getElementById("plan").value;
-    const issue = document.getElementById("issue").value.trim();
-
-    const success = document.getElementById("successMessage");
-
-    if (!name || !phone || !area || !size || !planName) {
-      success.textContent = "رجاءً عبّي كل المعلومات المطلوبة.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    const plan = PLAN_DATA[planName];
-
-    if (!plan) {
-      success.textContent = "الخطة غير صحيحة.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    // التحقق من مساحة البيت
-    if (planName === "Home" && size > 150) {
-      success.textContent =
-        "خطة Home للبيوت لحد 150 م². اختار Premium.";
-      success.style.color = "#ff7777";
-      return;
-    }
-
-    if (planName === "Premium" && size <= 150) {
-      success.textContent =
-        "خطة Premium للبيوت فوق 150 م².";
-      success.style.color = "#ff7777";
-      return;
-    }
+  menuBtn.textContent =
+    mobileMenu.classList.contains("active") ? "✕" : "☰";
+});
 
 
-    const request = {
-      id: "REQ-" + Date.now(),
+document.querySelectorAll(".mobile-menu a").forEach(link => {
 
-      customer: {
-        name: name,
-        phone: phone,
-        area: area,
-        houseSize: size,
-        issue: issue
-      },
+  link.addEventListener("click", () => {
 
-      plan: {
-        name: plan.name,
-        price: plan.price,
-        visitsIncluded: plan.visits
-      },
+    mobileMenu.classList.remove("active");
 
-      paymentStatus: "Pending",
-      subscriptionStatus: "New Request",
-
-      visitsUsed: 0,
-      visitsRemaining: plan.visits,
-
-      startDate: null,
-      expiryDate: null,
-
-      createdAt: new Date().toISOString()
-    };
-
-
-    // حفظ الطلب
-    try {
-
-      const requests = JSON.parse(
-        localStorage.getItem("taf2naRequests") || "[]"
-      );
-
-      requests.push(request);
-
-      localStorage.setItem(
-        "taf2naRequests",
-        JSON.stringify(requests)
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-      success.textContent =
-        "صار خطأ بحفظ الطلب. جرّب مرة ثانية.";
-
-      success.style.color = "#ff7777";
-
-      return;
-    }
-
-
-    // رسالة WhatsApp
-    const message =
-`Taf2na - New Subscription Request
-
-Request ID: ${request.id}
-
-Name: ${name}
-Phone: ${phone}
-Area: ${area}
-House Size: ${size} m²
-
-Plan: ${plan.name}
-Price: $${plan.price}
-Visits: ${plan.visits}
-
-Issue:
-${issue || "N/A"}
-
-Payment:
-Whish Money - 03 950 998`;
-
-
-    const whatsappURL =
-      "https://wa.me/96176950998?text=" +
-      encodeURIComponent(message);
-
-
-    success.innerHTML =
-      `تم إرسال طلبك بنجاح ✓<br>
-       رقم الطلب: <b>${request.id}</b><br>
-       رح نتواصل معك لتأكيد الدفع.`;
-
-    success.style.color = "#8df0a9";
-
-
-    // افتح WhatsApp بعد نجاح حفظ الطلب
-    setTimeout(() => {
-      window.open(whatsappURL, "_blank");
-    }, 300);
-
-
-    form.reset();
+    menuBtn.textContent = "☰";
 
   });
 
 });
+
+
+/* ================= FAQ ================= */
+
+const faqQuestions = document.querySelectorAll(".faq-question");
+
+faqQuestions.forEach(question => {
+
+  question.addEventListener("click", () => {
+
+    const item = question.parentElement;
+
+    document.querySelectorAll(".faq-item").forEach(otherItem => {
+
+      if (otherItem !== item) {
+        otherItem.classList.remove("active");
+      }
+
+    });
+
+    item.classList.toggle("active");
+
+  });
+
+});
+
+
+/* ================= SCROLL ANIMATION ================= */
+
+const revealElements = document.querySelectorAll(".reveal");
+
+const observer = new IntersectionObserver(
+  (entries) => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.classList.add("visible");
+
+        observer.unobserve(entry.target);
+
+      }
+
+    });
+
+  },
+  {
+    threshold: 0.12
+  }
+);
+
+
+revealElements.forEach(element => {
+  observer.observe(element);
+});
+
+
+/* ================= SUBSCRIBE FORM ================= */
+
+const form = document.getElementById("subscribeForm");
+const successMessage = document.getElementById("formSuccess");
+
+form.addEventListener("submit", (event) => {
+
+  event.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const area = document.getElementById("area").value.trim();
+  const issue = document.getElementById("issue").value.trim();
+
+  if (!name || !phone || !area) {
+    alert("Please fill in your name, phone number and area.");
+    return;
+  }
+
+
+  /*
+    WhatsApp message
+
+    This uses your Taf2na number:
+    +961 76 950 998
+  */
+
+  const message = `
+مرحباً Taf2na 👋
+
+بدي اشترك بخدمة الصيانة.
+
+الاسم: ${name}
+رقم الهاتف: ${phone}
+المنطقة: ${area}
+
+المشكلة:
+${issue || "لا يوجد"}
+  `;
+
+
+  const whatsappURL =
+    "https://wa.me/96176950998?text=" +
+    encodeURIComponent(message);
+
+
+  successMessage.classList.add("show");
+
+  setTimeout(() => {
+
+    window.open(
+      whatsappURL,
+      "_blank"
+    );
+
+  }, 700);
+
+});
+
+
 /* ================= CURRENT YEAR ================= */
 
 document.getElementById("year").textContent =
